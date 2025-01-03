@@ -54,6 +54,7 @@ const uniqueTags = [...new Set(posts.flatMap((post) => post.data.tags || []))];
                 >
                   <a href={`/blog/${slug}`} class='block'>
                     <img
+                      transition:name={`img-${slug}`}
                       src={img}
                       alt={title}
                       class='w-full h-48 object-cover rounded-t-lg'

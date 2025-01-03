@@ -44,6 +44,7 @@ const { Content } = await render(post);
         src={img.startsWith('/') ? img : `/${img}`}
         alt={title}
         class='w-full h-64 object-cover mx-auto rounded-lg shadow-lg mb-8'
+        transition:name={`img-${slug}`}
       />
 
       <!-- Contenido del artículo -->
