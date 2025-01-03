@@ -1,0 +1,39 @@
+---
+import SectionTitle from './ui/SectionTitle.astro';
+import ServiceCard from './ui/ServiceCard.astro';
+import AnimatedSection from './ui/AnimatedSection.astro';
+
+const services = [
+  {
+    title: 'Asesoramiento Nutricional',
+    description: 'Planes personalizados basados en tus objetivos deportivos y necesidades específicas.',
+    icon: 'nutrition',
+  },
+  {
+    title: 'Planificación de Dietas',
+    description: 'Dietas adaptadas a tu rutina de entrenamiento para maximizar tu rendimiento.',
+    icon: 'planning',
+  },
+  {
+    title: 'Análisis Corporal',
+    description: 'Evaluación detallada de tu composición corporal para un seguimiento preciso.',
+    icon: 'analysis',
+  },
+];
+---
+
+<section id="servicios" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <AnimatedSection>
+      <div class="text-center mb-12">
+        <SectionTitle>Servicios</SectionTitle>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Descubre cómo puedo ayudarte a alcanzar tus objetivos deportivos a través de una nutrición optimizada
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        {services.map(service => <ServiceCard {...service} />)}
+      </div>
+    </AnimatedSection>
+  </div>
+</section>

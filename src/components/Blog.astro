@@ -1,0 +1,110 @@
+---
+import { getCollection } from 'astro:content';
+import SectionTitle from './ui/SectionTitle.astro';
+import AnimatedSection from './ui/AnimatedSection.astro';
+
+// Obtener las publicaciones desde la colección y ordenarlas por fecha descendente
+const posts = (await getCollection('posts')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+// Tomar las 3 últimas publicaciones
+const latestPosts = posts.slice(0, 3);
+---
+
+<section id='blog' class='py-20 bg-white'>
+  <div class='container mx-auto px-4'>
+    <AnimatedSection>
+      <div class='text-center mb-12'>
+        <SectionTitle>Blog</SectionTitle>
+        <p class='text-gray-600 max-w-2xl mx-auto'>
+          Últimas publicaciones y consejos sobre nutrición deportiva para
+          mejorar tu rendimiento.
+        </p>
+      </div>
+    </AnimatedSection>
+
+    <AnimatedSection>
+      {
+        latestPosts.length > 0 ? (
+          <div class='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+            {latestPosts.map((post) => {
+              const { slug, data } = post;
+              const { title, description, img, date, tags, link } = data;
+
+              return (
+                <article class='bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105'>
+                  <a href={`/blog/${slug}`} class='block'>
+                    <img
+                      src={img}
+                      alt={title}
+                      class='w-full h-48 object-cover rounded-t-lg'
+                    />
+                  </a>
+                  <div class='p-6'>
+                    <time
+                      datetime={new Date(date).toISOString()}
+                      class='block text-sm text-gray-500 mb-2'
+                    >
+                      {new Date(date).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </time>
+                    <h2 class='text-lg font-bold text-nutrigj-black mb-2'>
+                      {title}
+                    </h2>
+                    <p class='text-gray-600 mb-4'>{description}</p>
+                    <div class='flex flex-wrap gap-2'>
+                      {tags.map((tag) => (
+                        <span class='bg-nutrigj-secondary/20 text-nutrigj-secondary text-xs font-semibold px-2 py-1 rounded-full'>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <a
+                      href={`/blog/${slug}`}
+                      class='inline-flex items-center mt-4 text-nutrigj-primary font-semibold transition-transform hover:scale-105'
+                    >
+                      Leer más
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        class='h-5 w-5 ml-2'
+                        viewBox='0 0 20 20'
+                        fill='currentColor'
+                      >
+                        <path
+                          fill-rule='evenodd'
+                          d='M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z'
+                          clip-rule='evenodd'
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div class='text-center text-gray-600'>
+            <p>
+              No hay artículos disponibles por ahora. ¡Pronto publicaremos más
+              contenido!
+            </p>
+          </div>
+        )
+      }
+    </AnimatedSection>
+
+    <!-- Botón para ir al Blog -->
+    <div class='text-center mt-12'>
+      <a
+        href='/blog'
+        class='inline-block bg-nutrigj-secondary hover:bg-nutrigj-secondary/90 text-white font-semibold py-3 px-8 rounded-full transition-transform hover:scale-105'
+      >
+        Más publicaciones
+      </a>
+    </div>
+  </div>
+</section>

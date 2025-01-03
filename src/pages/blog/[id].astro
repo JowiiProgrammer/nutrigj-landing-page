@@ -1,0 +1,93 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/OtherLayout.astro';
+
+// Obtener las rutas dinámicas para cada post
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+
+  return posts.map((post) => ({
+    params: { id: post.slug },
+    props: { post },
+  }));
+}
+
+// Obtener los datos del post desde las props
+const { post } = Astro.props;
+const { data, slug } = post; // Extraer los datos del post
+const { title, description, img, date, tags, link } = data;
+
+// Renderizar el contenido del post en HTML
+const { Content } = await render(post);
+---
+
+<Layout title={`${title} - NutriGJ`} description={description}>
+  <section class='container mt-6 mx-auto px-4 py-20 grid md:grid-cols-3 gap-8'>
+    <!-- Contenido Principal -->
+    <article class='md:col-span-2'>
+      <!-- Título -->
+      <h1 class='text-4xl font-bold text-nutrigj-black mb-4'>{title}</h1>
+
+      <!-- Fecha de publicación -->
+      <p class='text-sm text-gray-500 mb-6'>
+        Publicado el {
+          new Date(date).toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })
+        }
+      </p>
+
+      <!-- Imagen destacada -->
+      <img
+        src={img.startsWith('/') ? img : `/${img}`}
+        alt={title}
+        class='w-full h-64 object-cover mx-auto rounded-lg shadow-lg mb-8'
+      />
+
+      <!-- Contenido del artículo -->
+      <div class='prose prose-lg text-gray-800 leading-relaxed'>
+        <Content />
+      </div>
+    </article>
+
+    <!-- Sección Lateral (Categorías y Botón de Video) -->
+    <aside
+      class='bg-gray-100 p-6 rounded-lg shadow-md self-start'
+      style={`margin-top: 0;`}
+    >
+      <!-- Título de Categorías -->
+      <h2 class='text-lg font-bold text-nutrigj-black mb-4'>
+        Categorías del Blog
+      </h2>
+
+      <!-- Categorías -->
+      <ul class='flex flex-wrap gap-2 mb-6'>
+        {
+          tags.map((tag) => (
+            <li>
+              <span class='bg-nutrigj-secondary/20 text-nutrigj-secondary text-xs font-semibold px-2 py-1 rounded-full'>
+                {tag}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- Botón para enlace al video -->
+      {
+        link && (
+          <a
+            href={link}
+            target='_blank'
+            rel='noopener noreferrer'
+            class='block bg-nutrigj-primary hover:bg-nutrigj-primary/90 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-transform hover:scale-105 text-center'
+          >
+            Ver video relacionado
+          </a>
+        )
+      }
+    </aside>
+  </section>
+</Layout>
